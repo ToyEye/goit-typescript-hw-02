@@ -1,7 +1,13 @@
+import React from 'react';
+import { Images } from '../../types/images';
 import ImageCard from '../ImageCard/ImageCard';
 import s from './ImageGallery.module.css';
 
-const ImageGallery = ({ images, onImageClick }) => {
+interface ImageGalleryProps {
+  images: Images[];
+  onImageClick: (image: Images) => void;
+}
+const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImageClick }) => {
   return (
     <div className={s.wrapper}>
       <ul className={s.gallery}>

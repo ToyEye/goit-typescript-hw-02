@@ -1,7 +1,8 @@
 import { Oval } from 'react-loader-spinner';
 import s from './Loader.module.css';
+import React from 'react';
 
-const Loader = () => (
+const Loader: React.FC = () => (
   <div className={s.loader__wrapper}>
     <Oval
       height={80}

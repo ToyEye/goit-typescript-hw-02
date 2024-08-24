@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import fetchImages from './Api/unsplash-api';
 import SearchBar from './SearchBar/SearchBar';
 import ImageGallery from './ImageGallery/ImageGallery';
@@ -9,33 +9,37 @@ import ImageModal from './ImageModal/ImageModal';
 import { Toaster } from 'react-hot-toast';
 import Footer from './Footer/Footer';
 import s from './App.module.css';
-
-const App = () => {
-  const [images, setImages] = useState([]);
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+import { Images } from '../types/images';
+const App: React.FC = () => {
+  const [images, setImages] = useState<Images[]>([]);
+  const [query, setQuery] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<Images | null>(null);
   const [noImages, setNoImages] = useState(false);
 
   useEffect(() => {
     if (!query) return;
 
-    const getImages = async () => {
+    const getImages = async (): Promise<void> => {
       setLoading(true);
       setNoImages(false);
       setTimeout(async () => {
         try {
-          const newImages = await fetchImages(query, page);
+          const newImages: Images[] = (await fetchImages(query, page));
           if (newImages.length === 0 && page === 1) {
             setNoImages(true);
           }
           setImages(prevImages => [...prevImages, ...newImages]);
-        } catch (error) {
+        } catch (error: unknown) {
+        if (error instanceof Error) {
           setError(error.message);
-        } finally {
+        } else {
+          setError('An unknown error occurred');
+        }
+      } finally {
           setLoading(false);
         }
       }, 1000);
@@ -44,7 +48,7 @@ const App = () => {
     getImages();
   }, [query, page]);
 
-  const handleSearch = searchQuery => {
+  const handleSearch = (searchQuery: string) => {
     setQuery(searchQuery);
     setImages([]);
     setPage(1);
@@ -52,14 +56,14 @@ const App = () => {
     setNoImages(false);
   };
 
-  const handleLoadMore = () => setPage(prevPage => prevPage + 1);
+  const handleLoadMore: () => void = () => setPage(prevPage => prevPage + 1);
 
-  const handleImageClick = image => {
+  const handleImageClick: (image: Images) => void = image => {
     setSelectedImage(image);
     setShowModal(true);
   };
 
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal: () => void = () => setShowModal(false);
 
   return (
     <div className="App">
