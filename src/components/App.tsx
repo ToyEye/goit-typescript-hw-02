@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 import Footer from './Footer/Footer';
 import s from './App.module.css';
 import { Images } from '../types/images';
+
 const App: React.FC = () => {
   const [images, setImages] = useState<Images[]>([]);
   const [query, setQuery] = useState<string>('');
